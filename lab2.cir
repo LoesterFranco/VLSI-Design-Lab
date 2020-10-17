@@ -1,0 +1,74 @@
+*STUDY THE TRANSFER FUNCTION, NOISE MARGIN, EFFECT ON RISETIME, FALLTIME, PROPOGATION DELAY, POWER AND ENERGY CONSUMED OF A MOS INVERTER FOR VARIOUS L, W, LOAD CAPACITANCE, AND RISE/FALL TIME OF INPUT.
+
+.include ./level3.txt
+
+* the circuit is a mos inverter with passive load
+ma mos in 0 0 cmosn w=1u l=1u
+r1 pos out 10k
+rload out rl 1000k
+* load capacitance
+cload out cap 12f
+
+vpos pos 0 5.0
+vmos out mos 0
+vcap cap 0 0
+vres rl 0 0
+vin in 0 dc 2.5 pulse(0 5 1n 0.1n 0.1n 2n 4n)
+
+* The following block of code is only for debugging
+*.control
+*	dc vin 0 5 0.1
+*	plot v(out)
+*	tran 0.01n 4n
+*	plot v(in) v(out)
+*.endc
+
+* STUDYING THE TRANSFER FUNCTION while varying width, length
+.control
+	foreach res 1k 5k 10k
+		alter r1=$res
+		dc vin 0 5 0.1
+		plot v(out)	title $res
+		tran 0.01n 4n
+		meas tran voh MAX out from=0n to=0.9n
+		meas tran vol MIN out from=1.8n to=2.2n
+		plot v(in) v(out) title r=$res
+		let v_90 = vol + 0.9*(voh-vol)
+		let v_10 = vol + 0.1*(voh-vol)
+		let v_50 = vol + 0.5*(voh-vol)
+		meas tran trise trig out val=v_10 rise=1 targ out val=v_90 rise=1
+		meas tran tfall trig out val=v_90 fall=1 targ out val=v_10 fall=1
+		meas tran tphl trig in val=2.5 rise=1 targ out val=v_50 fall=1
+		meas tran tplh trig in val=2.5 fall=1 targ out val=v_50 rise=1
+		let td = 0.5*(tphl+tplh)
+		let power = -5*vpos#branch
+		meas tran pavg AVG power from=0n to=4n
+		plot -vmos#branch title nmosCurrent_r=$res
+		plot -vcap#branch title capCurrent_r=$res
+		plot -vres#branch title resCurrent_r=$res
+		end
+	foreach width 0.5u 2u 5u
+		alter ma w=$width
+		dc vin 0 5 0.1
+		plot v(out) title $width
+		tran 0.01n 4n
+		meas tran voh MAX out from=0n to=0.9n
+		meas tran vol MIN out from=1.8n to=2.2n
+		plot v(in) v(out) title w=$width
+		let v_90 = vol + 0.9*(voh-vol)
+		let v_10 = vol + 0.1*(voh-vol)
+		let v_50 = vol + 0.5*(voh-vol)
+		meas tran trise trig out val=v_10 rise=1 targ out val=v_90 rise=1
+		meas tran tfall trig out val=v_90 fall=1 targ out val=v_10 fall=1
+		meas tran tphl trig in val=2.5 rise=1 targ out val=v_50 fall=1
+		meas tran tplh trig in val=2.5 fall=1 targ out val=v_50 rise=1
+		let td = 0.5*(tphl+tplh)
+		let power = -5*vpos#branch
+		meas tran pavg AVG power from=0n to=4n
+		plot -vmos#branch title nmosCurrent_w=$width
+		plot -vcap#branch title capCurrent_w=$width
+		plot -vres#branch title resCurrent_w=$width
+		end
+.endc
+
+.end 
