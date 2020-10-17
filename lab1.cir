@@ -1,0 +1,90 @@
+*Study the input and output characteristics of NMOS Transistor, effects of L, W , vto, lambda, vsb, and temperature on the behaviour of the transistor.
+
+.include ./level3.txt
+
+ma pos in sb 0 cmosn l=1u w=1u temp=27
+
+
+vds pos 0 0.3
+vgs in 0 3.3
+vsb sb 0 0.0
+
+*.control
+	* use the below command if output characteristics are needed.
+*	dc vds 0 3.3 0.1 vgs 0 3.0 0.5
+	* use the below command if input characteristics are needed.
+*	dc vgs 0 3.3 0.1 vds 0 3.3 0.5 	
+*	plot -vds#branch
+*.endc
+
+
+* varying width on input and output characteristics
+*.control
+*	foreach width 0.5u 2u 5u
+*		alter ma w=$width
+*		dc vgs 0 3.3 0.1
+*		plot -vds#branch title ic@$width
+*		dc vds 0 3.3 0.1
+*		plot -vds#branch title oc@$width
+*		end
+*.endc
+
+
+
+* varying length on input and output characteristics
+*.control
+*	foreach length 0.5u 2u 5u
+*		alter ma l=$length
+*		dc vgs 0 3.3 0.1
+*		plot -vds#branch title ic@$length
+*		dc vds 0 3.3 0.1
+*		plot -vds#branch title oc@$length
+*		end
+*.endc
+
+
+*Effect of varying Threshold voltage on Input and Outout Characteristics
+
+*.control
+*	foreach vto 0.4 0.7 1.1
+*		altermod ma VTO = $vto
+*		dc vgs 0 3.3 0.1
+*		plot -vds#branch title ic@$vto
+*		dc vds 0 3.3 0.1
+*		plot -vds#branch title oc@$vto
+*		end
+	
+*.endc
+
+*Effect of varying channel length modulation parameter on input and output characteristics 
+*	change level 3 to 1
+
+*.control
+*	foreach lmb 0.04 0.6 3
+*		altermod ma LAMBDA=$lmb
+*		dc vgs 0 3.3 0.1
+*		plot -vds#branch title ic@$lmb
+*		dc vds 0 3.3 0.1
+*		plot -vds#branch title oc@$lmb
+*		end
+*.endc
+
+*EFFECT OF VARYING VSB ON INPUT AND OUTPUT CHARACTERISTICS
+*.control
+*	dc vgs 0 3.3 0.1 vsb 0 1.5 0.1
+*	plot -vds#branch 
+*	dc vds 0 3.3 0.1 vsb 0 1.5 0.1
+*	plot -vds#branch
+*.endc
+
+*EFFECT OF VARYING TEMPERATURE 
+*.control
+*	foreach t 27 50 100
+*		alter ma temp=$t
+*		dc vgs 0 3.3 0.1
+*		plot -vds#branch title ic@$t
+*		dc vds 0 3.3 0.1
+*		plot -vds#branch title oc@$t
+*		end
+*.endc
+.end
