@@ -1,0 +1,31 @@
+* SPICE3 file created from xor.ext - technology: scmos
+.option scale=1u
+M1000 An A vdd Vdd pfet w=6 l=2
++ ad=26 pd=22 as=140 ps=112
+M1001 Bn B vdd Vdd pfet w=6 l=2
++ ad=26 pd=22 as=0 ps=0
+M1002 Xp An vdd Vdd pfet w=12 l=2
++ ad=176 pd=136 as=0 ps=0
+M1003 Xp Bn vdd Vdd pfet w=12 l=2
++ ad=0 pd=0 as=0 ps=0
+M1004 out B Xp Vdd pfet w=12 l=2
++ ad=88 pd=68 as=0 ps=0
+M1005 out A Xp Vdd pfet w=12 l=2
++ ad=0 pd=0 as=0 ps=0
+M1006 An A 0 Gnd nfet w=3 l=2
++ ad=19 pd=18 as=90 ps=80
+M1007 Bn B 0 Gnd nfet w=3 l=2
++ ad=19 pd=18 as=0 ps=0
+M1008 out A X Gnd nfet w=6 l=2
++ ad=52 pd=44 as=52 ps=44
+M1009 X B 0 Gnd nfet w=6 l=2
++ ad=0 pd=0 as=0 ps=0
+M1010 out An Y Gnd nfet w=6 l=2
++ ad=0 pd=0 as=52 ps=44
+M1011 Y Bn 0 Gnd nfet w=6 l=2
++ ad=0 pd=0 as=0 ps=0
+C0 Y gnd! 3.1fF
+C1 X gnd! 3.1fF
+C2 out gnd! 7.0fF
+C3 Xp gnd! 8.7fF
+C4 vdd gnd! 17.1fF

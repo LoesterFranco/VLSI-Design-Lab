@@ -1,0 +1,43 @@
+* SPICE3 file created from dlatch.ext - technology: scmos
+.option scale=1u
+M1000 Q S vdd Vdd pfet w=6 l=2
++ ad=52 pd=44 as=234 ps=198
+M1001 Q Qn vdd Vdd pfet w=6 l=2
++ ad=0 pd=0 as=0 ps=0
+M1002 Qn Q vdd Vdd pfet w=6 l=2
++ ad=52 pd=44 as=0 ps=0
+M1003 Qn R vdd Vdd pfet w=6 l=2
++ ad=0 pd=0 as=0 ps=0
+M1004 P S 0 Gnd nfet w=6 l=2
++ ad=52 pd=44 as=130 ps=110
+M1005 Q Qn P Gnd nfet w=6 l=2
++ ad=26 pd=22 as=0 ps=0
+M1006 l Q 0 Gnd nfet w=6 l=2
++ ad=52 pd=44 as=0 ps=0
+M1007 Qn R l Gnd nfet w=6 l=2
++ ad=26 pd=22 as=0 ps=0
+M1008 S Clk vdd Vdd pfet w=6 l=2
++ ad=52 pd=44 as=0 ps=0
+M1009 S A vdd Vdd pfet w=6 l=2
++ ad=0 pd=0 as=0 ps=0
+M1010 An A vdd Vdd pfet w=6 l=2
++ ad=26 pd=22 as=0 ps=0
+M1011 R An vdd Vdd pfet w=6 l=2
++ ad=52 pd=44 as=0 ps=0
+M1012 R Clk vdd Vdd pfet w=6 l=2
++ ad=0 pd=0 as=0 ps=0
+M1013 x Clk 0 Gnd nfet w=6 l=2
++ ad=52 pd=44 as=0 ps=0
+M1014 S A x Gnd nfet w=6 l=2
++ ad=26 pd=22 as=0 ps=0
+M1015 An A 0 Gnd nfet w=6 l=2
++ ad=26 pd=22 as=0 ps=0
+M1016 y An 0 Gnd nfet w=6 l=2
++ ad=52 pd=44 as=0 ps=0
+M1017 R Clk y Gnd nfet w=6 l=2
++ ad=26 pd=22 as=0 ps=0
+C0 vdd gnd! 32.1fF
+C1 R gnd! 18.9fF
+C2 Q gnd! 10.8fF
+C3 Qn gnd! 19.9fF
+C4 S gnd! 19.6fF
