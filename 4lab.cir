@@ -1,0 +1,100 @@
+* For a CMOS Inverter study the transfer function, Noise margin, effect on risetime, falltime, propagation delay, power and energy consumed with variation in L and W of the pullup and pulldown transistors. Also power and energy consumed with non ideal step input.
+
+.include ./level3.txt
+
+* the circuit is a mos inverter with passive load
+mn mos in 0 0 cmosn w=2u l=1u
+mp out in pos pos cmosp w=4u l=1u
+* load capacitance as fanout load
+cload out cap 1f
+
+
+vpos pos 0 5.0
+
+* ideal pulse input
+* uncomment the following line to give an ideal output
+*vin in 0 dc 2.5 pulse(0 5 1n 0.1n 0.1n 2n 4n)
+
+* giving non ideal step input
+vin in in2 0 sin(0 0.2 1000MEG 1n 1e9)
+vin2 in3 in2 0 sin(0 0.2 1000MEG 3.2n 1e9)
+vin3 in3 0 0 pulse(0 5 1n 0.1n 0.1n 2n 4n)
+
+vcap cap 0 0
+vmos out mos 0
+
+*.control
+*	tran 0.01n 4n
+*	plot v(in) v(out)
+*	let power = -5*vpos#branch
+*	meas tran pavg AVG power from=0n to=4n
+*.endc
+
+* STUDYING THE TRANSFER FUNCTION while varying width of pullup and pulldown transistors
+.control
+	foreach width 0.5u 2u 5u
+		alter mn w=$width
+		dc vin 0 5 0.1
+		plot v(out) title wn=$width
+		tran 0.01n 4n
+		meas tran voh MAX out from=0n to=0.9n
+		meas tran vol MIN out from=1.8n to=2.2n
+		plot v(in) v(out) title wn=$width
+		let v_90 = vol + 0.9*(voh-vol)
+		let v_10 = vol + 0.1*(voh-vol)
+		let v_50 = vol + 0.5*(voh-vol)
+		meas tran trise trig out val=v_10 cross=2 targ out val=v_90 cross=2
+		meas tran tfall trig out val=v_90 cross=1 targ out val=v_10 cross=1
+		meas tran tphl trig in val=2.5 rise=1 targ out val=v_50 fall=1
+		meas tran tplh trig in val=2.5 fall=1 targ out val=v_50 rise=1
+		let td = 0.5*(tphl+tplh)
+		let power = -5*vpos#branch
+		meas tran pavg AVG power from=0n to=4n
+		print td
+		end
+	foreach width 0.5u 2u 5u
+		alter mp w=$width
+		dc vin 0 5 0.1
+		plot v(out) title wp=$width
+		tran 0.01n 4n
+		meas tran voh MAX out from=0n to=0.9n
+		meas tran vol MIN out from=1.8n to=2.2n
+		plot v(in) v(out) title wp=$width
+		let v_90 = vol + 0.9*(voh-vol)
+		let v_10 = vol + 0.1*(voh-vol)
+		let v_50 = vol + 0.5*(voh-vol)
+		meas tran trise trig out val=v_10 cross=2 targ out val=v_90 cross=2
+		meas tran tfall trig out val=v_90 cross=1 targ out val=v_10 cross=1
+		meas tran tphl trig in val=2.5 rise=1 targ out val=v_50 fall=1
+		meas tran tplh trig in val=2.5 fall=1 targ out val=v_50 rise=1
+		let td = 0.5*(tphl+tplh)
+		let power = -5*vpos#branch
+		meas tran pavg AVG power from=0n to=4n
+		print td
+		end
+.endc
+*Varying rise and fall time of input signal to study the variations in power and energy consumed per transistion at input signal itself, so now going to part c
+
+* Varying the load capacitance and studying the rise, fall times and propagation delay and power consumed
+.control
+	foreach cap 1f 50f 100f
+		alter cload=$cap
+		tran 0.01n 4n
+		plot v(in) v(out) title cap=$cap
+		meas tran voh MAX out from=0n to=0.9n
+		meas tran vol MIN out from=1.8n to=2.2n
+		let v_90 = vol + 0.9*(voh-vol)
+		let v_10 = vol + 0.1*(voh-vol)
+		let v_50 = vol + 0.5*(voh-vol)
+		meas tran trise trig out val=v_10 cross=2 targ out val=v_90 cross=2
+		meas tran tfall trig out val=v_90 cross=1 targ out val=v_10 cross=1
+		meas tran tphl trig in val=2.5 rise=1 targ out val=v_50 fall=1
+		meas tran tplh trig in val=2.5 fall=1 targ out val=v_50 rise=1
+		let td = 0.5*(tphl+tplh)
+		let power = -5*vpos#branch
+		meas tran pavg AVG power from=0n to=4n
+		print td
+		end
+.endc
+
+.end
