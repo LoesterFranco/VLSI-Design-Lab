@@ -1,0 +1,32 @@
+*Lab-6
+*CMOS Inverter with magic
+* SPICE3 file created from inv.ext - technology: scmos
+.include ./nec.txt
+.option scale=1u
+M1000 out in dd dd cmosp w=6 l=2
++ ad=26 pd=22 as=26 ps=22
+M1001 out in 0 0 cmosn w=3 l=2
++ ad=19 pd=18 as=19 ps=18
+C0 out 0 2.0fF
+C1 dd 0 2.2fF
+C2 in 0 5.9fF
+vdd dd 0 dc 5
+vin in 0 dc 2.5 pulse(0 5 1n 0.1n 0.1n 2n 4n)
+.tran 0.1ns 8n
+.control
+run
+end
+.endc
+.control
+setplot tran1
+let vol = 0
+let voh = 5
+let v90 = voh-0.1*(voh-vol)
+let v10 = vol+0.1*(voh-vol)
+let vhalf = voh-0.5*(voh-vol)
+meas tran trise trig out val=v10 rise=1 targ out val=v90 rise=1
+meas tran tfall trig out val=v90 fall=1 targ out val=v10 fall=1
+let power = -5*vdd#branch
+meas tran pavg AVG power from = 0 to = 8n
+.endc
+.end
