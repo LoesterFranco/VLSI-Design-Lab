@@ -1,0 +1,28 @@
+*LAB - 5 - Studythe behaviour transfer function, Noise margin, effect on risetime, falltime, propagation delay, power and energy consumec of CMOS gates like NAND, NOR, functions like AOI and 2 input XOR gate with variation in L and W of the pullup and pulldown transistors. Also power consumed with non ideal step input. Study the effect of VSB due to series connected transistors.
+
+.include ./level3.txt
+
+* xor gate
+mpa n1 a pos pos cmosp w=2u l=1u
+mpb n1 b pos pos cmosp w=2u l=1u
+mpa_ out a_ n1 n1 cmosp w=2u l=1u
+mpb_ out b_ n1 n1 cmosp w=2u l=1u
+mna out a n2 n2 cmosn w=1u l=1u
+mnb n2 b 0 0 cmosn w=1u l=1u
+mna_ out a_ n3 n3 cmosn w=1u l=1u
+mnb_ n3 b_ 0 0 cmosn w=1u l=1u
+
+
+
+vpos pos 0 5
+va a 0 0 pulse(0 5 4n 0.1n 0.1n 3.8n 8n)
+vb b 0 0 pulse(0 5 2n 0.1n 0.1n 1.8n 4n)
+va_ a_ 0 0 pulse(0 5 0 0.1n 0.1n 3.9n 8n)
+vb_ b_ 0 0 pulse(0 5 0 0.1n 0.1n 1.9n 4n)
+
+.control
+		tran 0.01n 8n
+		plot v(a) v(b) v(out)
+		let power = -5*vpos#branch
+		meas tran pavg AVG power from=0n to=4n
+.endc
